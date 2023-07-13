@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "com.divinity.anythingisay.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "${mod_id}.refmap.json",
+  "mixins": [
+    "ClientboundCustomPayloadPacketMixin"
+  ],
+  "client": [
+    "ClientLevelMixin",
+    "LevelRendererMixin",
+    "PlayerRendererMixin"
+  ],
+  "minVersion": "0.8.5"
+}
