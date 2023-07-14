@@ -198,7 +198,7 @@ public class CommonForgeEvents {
                 .then(Commands.argument("player", EntityArgument.player())
                         .executes(context -> {
                             var player = EntityArgument.getPlayer(context, "player");
-                            return placeTemplate(context.getSource(), player, MAZE, new BlockPos(context.getSource().getPosition()), 22, 1, 25, Rotation.NONE, Mirror.NONE, 1.0F, 0);
+                            return placeTemplate(context.getSource(), player, MAZE, new BlockPos(player.position()), 22, 1, 25, Rotation.NONE, Mirror.NONE, 1.0F, 0);
                         })
                 )
         );
@@ -206,7 +206,7 @@ public class CommonForgeEvents {
                 .then(Commands.argument("player", EntityArgument.player())
                         .executes(context -> {
                             var player = EntityArgument.getPlayer(context, "player");
-                            var pos = context.getSource().getPosition();
+                            var pos = player.position();
                             return placeTemplate(context.getSource(), player, MOON, new BlockPos(pos.x, pos.y + 60, pos.z), 14, 40, 14, Rotation.NONE, Mirror.NONE, 1.0F, 0);
                         })
                 )
