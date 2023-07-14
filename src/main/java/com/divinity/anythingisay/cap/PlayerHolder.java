@@ -16,6 +16,7 @@ public class PlayerHolder extends PlayerCapability {
     private boolean twisted;
     private boolean small;
     private boolean isRainingLava;
+    private int smallTicks;
 
     protected PlayerHolder(Player entity) {
         super(entity);
@@ -24,6 +25,7 @@ public class PlayerHolder extends PlayerCapability {
         this.twisted = false;
         this.small = false;
         this.isRainingLava = false;
+        this.smallTicks = 0;
     }
 
     @Override
@@ -34,6 +36,7 @@ public class PlayerHolder extends PlayerCapability {
         tag.putBoolean("twist", this.twisted);
         tag.putBoolean("small", this.small);
         tag.putBoolean("lava", this.isRainingLava);
+        tag.putInt("smallTicks", this.smallTicks);
         return tag;
     }
 
@@ -44,6 +47,7 @@ public class PlayerHolder extends PlayerCapability {
         this.twisted = nbt.getBoolean("twist");
         this.small = nbt.getBoolean("small");
         this.isRainingLava = nbt.getBoolean("lava");
+        this.smallTicks = nbt.getInt("smallTicks");
     }
 
     @Override
@@ -106,23 +110,6 @@ public class PlayerHolder extends PlayerCapability {
         updateTracking();
     }
 
-    public boolean isSmall() {
-        return small;
-    }
-
-    public void setSmall(boolean small) {
-        this.small = small;
-        updateTracking();
-        updateDimensions();
-    }
-
-    public void updateDimensions() {
-        if (this.entity.level.isClientSide)
-            return;
-        this.entity.refreshDimensions();
-        getNetworkChannel().send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> this.entity), new UpdateDimensionsPacket(this.entity.getUUID()));
-    }
-
     public boolean isRainingLava() {
         return isRainingLava;
     }
@@ -130,5 +117,31 @@ public class PlayerHolder extends PlayerCapability {
     public void setRainingLava(boolean rainingLava) {
         isRainingLava = rainingLava;
         updateTracking();
+    }
+
+    public int getSmallTicks() {
+        return smallTicks;
+    }
+
+    public void setSmallTicks(int smallTicks) {
+        this.smallTicks = smallTicks;
+        updateTracking();
+        updateDimensions();
+    }
+
+    public void decrementSmallTicks() {
+        if (--this.smallTicks < 0) {
+            smallTicks = 0;
+        }
+        else if (smallTicks == 0) {
+            setSmallTicks(0);
+        }
+    }
+
+    public void updateDimensions() {
+        if (this.entity.level.isClientSide)
+            return;
+        this.entity.refreshDimensions();
+        getNetworkChannel().send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> this.entity), new UpdateDimensionsPacket(this.entity.getUUID()));
     }
 }

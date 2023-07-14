@@ -9,6 +9,7 @@ import com.divinity.anythingisay.config.ExampleClientConfig;
 import com.divinity.anythingisay.config.ExampleConfig;
 import com.divinity.anythingisay.network.NetworkHandler;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.server.commands.PlaceCommand;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.IEventBus;

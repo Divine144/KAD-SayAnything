@@ -24,12 +24,16 @@ public class PlayerRendererMixin<T extends AbstractClientPlayer> extends EntityR
         return pEntity.getSkinTextureLocation();
     }
 
-    @Inject(method = "scale(Lnet/minecraft/client/player/AbstractClientPlayer;Lcom/mojang/blaze3d/vertex/PoseStack;F)V", at = @At("HEAD"), cancellable = true)
+    @Inject(
+            method = "scale(Lnet/minecraft/client/player/AbstractClientPlayer;Lcom/mojang/blaze3d/vertex/PoseStack;F)V",
+            at = @At("HEAD"),
+            cancellable = true
+    )
     public void scale(AbstractClientPlayer pLivingEntity, PoseStack pMatrixStack, float pPartialTickTime, CallbackInfo ci) {
         if (pLivingEntity != null) {
             var cap = PlayerHolderAttacher.getPlayerHolderUnwrap(pLivingEntity);
             if (cap != null) {
-                if (cap.isSmall()) {
+                if (cap.getSmallTicks() > 0) {
                     float f = 0.9375F;
                     pMatrixStack.scale(f / 3, f / 3, f / 3);
                     shadowRadius = 0.5F / 3;

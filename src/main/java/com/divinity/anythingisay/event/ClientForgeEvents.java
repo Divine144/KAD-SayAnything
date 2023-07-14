@@ -32,7 +32,6 @@ public class ClientForgeEvents {
                     player.input.forwardImpulse = calculateImpulse(player.input.down, player.input.up);
                     player.input.jumping = Minecraft.getInstance().options.keyShift.isDown();
                     player.input.shiftKeyDown = Minecraft.getInstance().options.keyJump.isDown();
-
                 }
             }
         }
@@ -41,7 +40,8 @@ public class ClientForgeEvents {
     private static float calculateImpulse(boolean pInput, boolean pOtherInput) {
         if (pInput == pOtherInput) {
             return 0.0F;
-        } else {
+        }
+        else {
             return pInput ? 1.0F : -1.0F;
         }
     }
