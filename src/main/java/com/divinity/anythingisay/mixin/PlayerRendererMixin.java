@@ -6,22 +6,16 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
-import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(PlayerRenderer.class)
-public class PlayerRendererMixin<T extends AbstractClientPlayer> extends EntityRenderer<T> {
+public abstract class PlayerRendererMixin<T extends AbstractClientPlayer> extends EntityRenderer<T> {
 
-    protected PlayerRendererMixin(EntityRendererProvider.Context pContext) {
+    public PlayerRendererMixin(EntityRendererProvider.Context pContext) {
         super(pContext);
-    }
-
-    @Override
-    public ResourceLocation getTextureLocation(T pEntity) {
-        return pEntity.getSkinTextureLocation();
     }
 
     @Inject(
