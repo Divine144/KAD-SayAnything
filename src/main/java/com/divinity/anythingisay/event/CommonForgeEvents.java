@@ -33,6 +33,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Blocks;
@@ -47,6 +48,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityEvent;
@@ -174,6 +176,14 @@ public class CommonForgeEvents {
                             var holder = PlayerHolderAttacher.getPlayerHolderUnwrap(player);
                             if (holder != null) {
                                 holder.setBigTicks(60 * 20);
+                                var reachDistance = player.getAttribute(ForgeMod.REACH_DISTANCE.get());
+                                var attackDistance = player.getAttribute(ForgeMod.ATTACK_RANGE.get());
+                                if (reachDistance != null) {
+                                    reachDistance.setBaseValue(4.5F * 16);
+                                }
+                                if (attackDistance != null) {
+                                    attackDistance.setBaseValue(3F * 16);
+                                }
                             }
                             return Command.SINGLE_SUCCESS;
                         })
@@ -267,6 +277,7 @@ public class CommonForgeEvents {
 
                 if (holder.getBigTicks() > 0) {
                     holder.decrementBigTicks();
+
                 }
             }
         }

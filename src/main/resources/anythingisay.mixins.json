@@ -10,7 +10,7 @@
     "CameraMixin",
     "ClientLevelMixin",
     "LevelRendererMixin",
-    "LocalPlayerAccessor",
+    "LocalPlayerMixin",
     "PlayerRendererMixin"
   ],
   "minVersion": "0.8.5"

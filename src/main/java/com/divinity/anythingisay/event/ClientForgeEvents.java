@@ -1,11 +1,9 @@
 package com.divinity.anythingisay.event;
 
 import com.divinity.anythingisay.cap.PlayerHolderAttacher;
-import com.divinity.anythingisay.mixin.LocalPlayerAccessor;
+import com.divinity.anythingisay.mixin.LocalPlayerMixin;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.MovementInputUpdateEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -24,12 +22,6 @@ public class ClientForgeEvents {
                     player.input.forwardImpulse = 0.0F;
                     player.input.shiftKeyDown = false;
                     player.input.jumping = false;
-                }
-                else if (cap.getNoWalkTicks() > 0) {
-                    if (player instanceof LocalPlayerAccessor accessor) {
-                        accessor.setSprintTriggerTime(0);
-                    }
-                    player.setSprinting(false);
                 }
                 if (cap.isTwisted()) {
                     player.input.leftImpulse = calculateImpulse(player.input.right, player.input.left);

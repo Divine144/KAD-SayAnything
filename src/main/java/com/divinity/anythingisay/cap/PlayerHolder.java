@@ -7,6 +7,7 @@ import dev._100media.capabilitysyncer.network.EntityCapabilityStatusPacket;
 import dev._100media.capabilitysyncer.network.SimpleEntityCapabilityStatusPacket;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 
@@ -158,6 +159,14 @@ public class PlayerHolder extends PlayerCapability {
         }
         else if (bigTicks == 0) {
             setBigTicks(0);
+            var reachDistance = player.getAttribute(ForgeMod.REACH_DISTANCE.get());
+            var attackDistance = player.getAttribute(ForgeMod.ATTACK_RANGE.get());
+            if (reachDistance != null) {
+                reachDistance.setBaseValue(4.5F);
+            }
+            if (attackDistance != null) {
+                attackDistance.setBaseValue(3F);
+            }
         }
     }
 
