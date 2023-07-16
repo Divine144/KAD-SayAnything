@@ -298,11 +298,13 @@ public class CommonForgeEvents {
                 throw ERROR_TEMPLATE_FAILED.create();
             }
             else {
-                var pos = new BlockPos.MutableBlockPos();
-                for (int x = 0; x < 48; x++) {
-                    for (int z = 0; z < 48; z++) {
-                        pos.set(pPos.getX() + x, pPos.getY() - 1, pPos.getZ() + z);
-                        player.level.setBlock(pos, Blocks.STONE.defaultBlockState(), 3);
+                if (pTemplate == MAZE) {
+                    var pos = new BlockPos.MutableBlockPos();
+                    for (int x = 0; x < 48; x++) {
+                        for (int z = 0; z < 48; z++) {
+                            pos.set(pPos.getX() + x, pPos.getY() - 1, pPos.getZ() + z);
+                            player.level.setBlock(pos, Blocks.STONE.defaultBlockState(), 3);
+                        }
                     }
                 }
                 player.teleportTo(pPos.getX() + tpOffsetX, pPos.getY() + tpOffsetY, pPos.getZ() + tpOffsetZ); // Position player to a specific place in the structure
