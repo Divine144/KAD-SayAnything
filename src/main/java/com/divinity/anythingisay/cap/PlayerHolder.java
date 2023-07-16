@@ -17,6 +17,7 @@ public class PlayerHolder extends PlayerCapability {
     private boolean small;
     private boolean isRainingLava;
     private int smallTicks;
+    private int bigTicks;
 
     protected PlayerHolder(Player entity) {
         super(entity);
@@ -26,6 +27,7 @@ public class PlayerHolder extends PlayerCapability {
         this.small = false;
         this.isRainingLava = false;
         this.smallTicks = 0;
+        bigTicks = 0;
     }
 
     @Override
@@ -37,6 +39,7 @@ public class PlayerHolder extends PlayerCapability {
         tag.putBoolean("small", this.small);
         tag.putBoolean("lava", this.isRainingLava);
         tag.putInt("smallTicks", this.smallTicks);
+        tag.putInt("bigTicks", this.bigTicks);
         return tag;
     }
 
@@ -48,6 +51,7 @@ public class PlayerHolder extends PlayerCapability {
         this.small = nbt.getBoolean("small");
         this.isRainingLava = nbt.getBoolean("lava");
         this.smallTicks = nbt.getInt("smallTicks");
+        this.bigTicks = nbt.getInt("bigTicks");
     }
 
     @Override
@@ -135,6 +139,25 @@ public class PlayerHolder extends PlayerCapability {
         }
         else if (smallTicks == 0) {
             setSmallTicks(0);
+        }
+    }
+
+    public int getBigTicks() {
+        return bigTicks;
+    }
+
+    public void setBigTicks(int bigTicks) {
+        this.bigTicks = bigTicks;
+        updateTracking();
+        updateDimensions();
+    }
+
+    public void decrementBigTicks() {
+        if (--this.bigTicks < 0) {
+            bigTicks = 0;
+        }
+        else if (bigTicks == 0) {
+            setBigTicks(0);
         }
     }
 

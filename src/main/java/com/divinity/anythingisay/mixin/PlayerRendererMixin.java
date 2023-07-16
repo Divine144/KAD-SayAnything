@@ -27,10 +27,15 @@ public abstract class PlayerRendererMixin<T extends AbstractClientPlayer> extend
         if (pLivingEntity != null) {
             var cap = PlayerHolderAttacher.getPlayerHolderUnwrap(pLivingEntity);
             if (cap != null) {
+                float f = 0.9375F;
                 if (cap.getSmallTicks() > 0) {
-                    float f = 0.9375F;
                     pMatrixStack.scale(f / 3, f / 3, f / 3);
                     shadowRadius = 0.5F / 3;
+                    ci.cancel();
+                }
+                else if (cap.getBigTicks() > 0) {
+                    pMatrixStack.scale(20, 20, 20);
+                    shadowRadius = 0.5F * 20;
                     ci.cancel();
                 }
                 else {

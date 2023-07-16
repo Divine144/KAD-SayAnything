@@ -7,8 +7,10 @@
     "ClientboundCustomPayloadPacketMixin"
   ],
   "client": [
+    "CameraMixin",
     "ClientLevelMixin",
     "LevelRendererMixin",
+    "LocalPlayerAccessor",
     "PlayerRendererMixin"
   ],
   "minVersion": "0.8.5"

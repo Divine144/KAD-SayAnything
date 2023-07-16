@@ -22,6 +22,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.commands.PlaceCommand;
 import net.minecraft.server.commands.SummonCommand;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -60,6 +61,7 @@ public class CommonForgeEvents {
 
     private static final EntityDimensions OLD_PLAYER_DIMENSIONS = new EntityDimensions(0.6f, 1.8f, false);
     private static final EntityDimensions SHRINK_DIMENSIONS = new EntityDimensions(0.6f, 0.8f, true);
+    private static final EntityDimensions BIG_DIMENSIONS = new EntityDimensions(0.6f, 20f, true);
     private static final DynamicCommandExceptionType ERROR_TEMPLATE_INVALID = new DynamicCommandExceptionType((p_214582_) -> Component.translatable("commands.place.template.invalid", p_214582_));
     private static final SimpleCommandExceptionType ERROR_TEMPLATE_FAILED = new SimpleCommandExceptionType(Component.translatable("commands.place.template.failed"));
     private static final ResourceLocation MAZE = new ResourceLocation(AnythingISay.MODID, "maze");
@@ -153,7 +155,6 @@ public class CommonForgeEvents {
                         })
                 )
         );
-
         dispatcher.register(Commands.literal("small")
                 .then(Commands.argument("player", EntityArgument.player())
                         .executes(context -> {
@@ -161,6 +162,18 @@ public class CommonForgeEvents {
                             var holder = PlayerHolderAttacher.getPlayerHolderUnwrap(player);
                             if (holder != null) {
                                 holder.setSmallTicks(60 * 20);
+                            }
+                            return Command.SINGLE_SUCCESS;
+                        })
+                )
+        );
+        dispatcher.register(Commands.literal("big")
+                .then(Commands.argument("player", EntityArgument.player())
+                        .executes(context -> {
+                            var player = EntityArgument.getPlayer(context, "player");
+                            var holder = PlayerHolderAttacher.getPlayerHolderUnwrap(player);
+                            if (holder != null) {
+                                holder.setBigTicks(60 * 20);
                             }
                             return Command.SINGLE_SUCCESS;
                         })
@@ -207,7 +220,7 @@ public class CommonForgeEvents {
                         .executes(context -> {
                             var player = EntityArgument.getPlayer(context, "player");
                             var pos = player.position();
-                            return placeTemplate(context.getSource(), player, MOON, new BlockPos(pos.x, pos.y + 60, pos.z), 14, 40, 14, Rotation.NONE, Mirror.NONE, 1.0F, 0);
+                            return placeTemplate(context.getSource(), player, MOON, new BlockPos(pos.x, pos.y + 120, pos.z), 14, 45, 14, Rotation.NONE, Mirror.NONE, 1.0F, 0);
                         })
                 )
         );
@@ -221,6 +234,10 @@ public class CommonForgeEvents {
                 if (cap.getSmallTicks() > 0) {
                     event.setNewSize(SHRINK_DIMENSIONS, false);
                     event.setNewEyeHeight(player.isCrouching() ? 0.55F : 0.7F);
+                }
+                else if (cap.getBigTicks() > 0) {
+                    event.setNewSize(BIG_DIMENSIONS, false);
+                    event.setNewEyeHeight(player.isCrouching() ? 0.55F * 65 : 0.7F * 65);
                 }
                 else {
                     if (event.getOldSize().height != 1.8f) {
@@ -247,6 +264,10 @@ public class CommonForgeEvents {
                 if (holder.getSmallTicks() > 0) {
                     holder.decrementSmallTicks();
                 }
+
+                if (holder.getBigTicks() > 0) {
+                    holder.decrementBigTicks();
+                }
             }
         }
     }
@@ -272,12 +293,18 @@ public class CommonForgeEvents {
             if (pIntegrity < 1.0F) {
                 structureplacesettings.clearProcessors().addProcessor(new BlockRotProcessor(pIntegrity)).setRandom(StructureBlockEntity.createRandom((long)pSeed));
             }
-
             boolean flag = structuretemplate.placeInWorld(serverlevel, pPos, pPos, structureplacesettings, StructureBlockEntity.createRandom((long)pSeed), 2);
             if (!flag) {
                 throw ERROR_TEMPLATE_FAILED.create();
             }
             else {
+                var pos = new BlockPos.MutableBlockPos();
+                for (int x = 0; x < 48; x++) {
+                    for (int z = 0; z < 48; z++) {
+                        pos.set(pPos.getX() + x, pPos.getY() - 1, pPos.getZ() + z);
+                        player.level.setBlock(pos, Blocks.STONE.defaultBlockState(), 3);
+                    }
+                }
                 player.teleportTo(pPos.getX() + tpOffsetX, pPos.getY() + tpOffsetY, pPos.getZ() + tpOffsetZ); // Position player to a specific place in the structure
                 return 1;
             }

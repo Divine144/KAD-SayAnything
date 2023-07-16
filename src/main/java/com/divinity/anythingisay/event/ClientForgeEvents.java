@@ -1,6 +1,7 @@
 package com.divinity.anythingisay.event;
 
 import com.divinity.anythingisay.cap.PlayerHolderAttacher;
+import com.divinity.anythingisay.mixin.LocalPlayerAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.ResourceLocation;
@@ -25,6 +26,9 @@ public class ClientForgeEvents {
                     player.input.jumping = false;
                 }
                 else if (cap.getNoWalkTicks() > 0) {
+                    if (player instanceof LocalPlayerAccessor accessor) {
+                        accessor.setSprintTriggerTime(0);
+                    }
                     player.setSprinting(false);
                 }
                 if (cap.isTwisted()) {
